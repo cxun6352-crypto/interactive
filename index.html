@@ -10,21 +10,29 @@
         video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; display: none; }
         #videoStart { display: block; }
         .interactive-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); display: none; flex-direction: column; justify-content: center; align-items: center; gap: 20px; z-index: 999; }
-        .choice-btn { width: 280px; padding: 18px; font-size: 18px; color: #fff; background: #2f3542; border: 2px solid #57606f; border-radius: 30px; cursor: pointer; font-weight: bold; box-shadow: 0 4px 15px rgba(0,0,0,0.5); transition: background 0.2s; }
-        .choice-btn:active { background: #57606f; }
+        .choice-btn { width: 280px; padding: 18px; font-size: 18px; color: #fff; background: #2f3542; border: 2px solid #57606f; border-radius: 30px; cursor: pointer; font-weight: bold; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
     </style>
 </head>
 <body>
 
 <div class="video-container">
-    <!-- 视频文件名请确保在 Working Copy 里改成了 1.mov, 2.mov, 3.mov -->
-    <!-- 加上了兼容 iPad 的强制内嵌播放参数 -->
-    <video id="videoStart" src="1.mov" webkit-playsinline="true" playsinline="true" controls muted autoplay preload="auto"></video>
-    <video id="videoFail" src="2.mov" webkit-playsinline="true" playsinline="true" controls muted preload="auto"></video>
-    <video id="videoStudy" src="3.mov" webkit-playsinline="true" playsinline="true" controls muted preload="auto"></video>
+    <video id="videoStart" playsinline controls muted autoplay preload="auto">
+        <source src="1.mov" type="video/mp4">
+        <source src="1.MOV" type="video/mp4">
+    </video>
+    
+    <video id="videoFail" playsinline controls muted preload="auto">
+        <source src="2.mov" type="video/mp4">
+        <source src="2.MOV" type="video/mp4">
+    </video>
+    
+    <video id="videoStudy" playsinline controls muted preload="auto">
+        <source src="3.mov" type="video/mp4">
+        <source src="3.MOV" type="video/mp4">
+    </video>
 
     <div id="interactiveOverlay" class="interactive-overlay">
-        <div style="font-size:24px; margin-bottom:20px; font-weight:bold; letter-spacing:1px;">⏰ 30秒过去了，你打算怎么办？</div>
+        <div style="font-size:24px; margin-bottom:20px; font-weight:bold;">⏰ 30秒过去了，你打算怎么办？</div>
         <button class="choice-btn" onclick="makeChoice('fail')">继续趴着睡觉（逃课）</button>
         <button class="choice-btn" onclick="makeChoice('study')">立刻起床去教室上课</button>
     </div>
@@ -36,7 +44,7 @@
     const vStudy = document.getElementById('videoStudy');
     const overlay = document.getElementById('interactiveOverlay');
 
-    // 监听播放进度：当第一段 30 秒的视频播放到第 28 秒时，自动暂停并弹出选项
+    // 28秒自动暂停并弹窗
     vStart.addEventListener('timeupdate', () => {
         if (vStart.currentTime >= 28) {
             vStart.pause();
@@ -47,14 +55,8 @@
     function makeChoice(path) {
         overlay.style.display = 'none';
         vStart.style.display = 'none';
-        
-        if (path === 'fail') { 
-            vFail.style.display = 'block'; 
-            vFail.play(); 
-        } else if (path === 'study') { 
-            vStudy.style.display = 'block'; 
-            vStudy.play(); 
-        }
+        if (path === 'fail') { vFail.style.display = 'block'; vFail.play(); }
+        else if (path === 'study') { vStudy.style.display = 'block'; vStudy.play(); }
     }
 </script>
 </body>
