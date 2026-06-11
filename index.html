@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>我的互动剧场</title>
+    <style>
+        body { background-color: #000; color: #fff; font-family: -apple-system, BlinkMacSystemFont, sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; overflow: hidden; }
+        .video-container { position: relative; width: 100vw; height: 100vh; background: #000; }
+        video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; display: none; }
+        #videoStart { display: block; }
+        .interactive-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); display: none; flex-direction: column; justify-content: center; align-items: center; gap: 20px; z-index: 999; }
+        .question-title { font-size: 22px; font-weight: bold; text-align: center; margin-bottom: 10px; }
+        .choice-btn { width: 240px; padding: 15px; font-size: 16px; color: #fff; background: #2f3542; border: 2px solid #57606f; border-radius: 30px; cursor: pointer; font-weight: bold; }
+        .choice-btn.danger { background: #ff4757; border-color: #ff6b81; }
+    </style>
+</head>
+<body>
+
+<div class="video-container">
+    <!-- 三个播放器同时就绪，解决网络延迟黑屏 -->
+    <video id="videoStart" src="IMG_1806.mov" playsinline controls muted autoplay></video>
+    <video id="videoFail" src="3EC924E2-A1E0-4F5E-99F7-928B8F47CF64.mov" playsinline controls></video>
+    <video id="videoStudy" src="copy_4D606D2F-6919-414C-84AE-2F90F04FE80F.mov" playsinline controls></video>
+
+    <div id="interactiveOverlay" class="interactive-overlay">
+        <div class="question-title">⏰ 闹钟响了，你的抉择是？</div>
+        <button class="choice-btn danger" onclick="makeChoice('fail')">继续趴着睡觉（逃课）</button>
+        <button class="choice-btn" onclick="makeChoice('study')">去教室认真上课</button>
+    </div>
+</div>
+
+<script>
+    const vStart = document.getElementById('videoStart');
+    const vFail = document.getElementById('videoFail');
+    const vStudy = document.getElementById('videoStudy');
+    const overlay = document.getElementById('interactiveOverlay');
+
+    const TRIGGER_TIME = 3; // 第 3 秒弹窗，方便测试
+    let hasTriggered = false;
+
+    vStart.addEventListener('timeupdate', () => {
+        if (vStart.currentTime >= TRIGGER_TIME && !hasTriggered) {
+            vStart.pause();
+            overlay.style.display = 'flex';
+            hasTriggered = true;
+        }
+    });
+
+    function makeChoice(path) {
+        overlay.style.display = 'none';
+        vStart.style.display = 'none';
+        
+        if (path === 'fail') {
+            vFail.style.display = 'block';
+            vFail.play();
+        } else if (path === 'study') {
+            vStudy.style.display = 'block';
+            vStudy.play();
+        }
+    }
+</script>
+</body>
+</html>
